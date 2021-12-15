@@ -15,5 +15,5 @@ MAINTAINER	Eric Dorr <githubcode@mail.ericdorr.de>
 WORKDIR /docker-background-cpuminer-randomx
 COPY --from=builder /docker-background-cpuminer-randomx .
 RUN		    apt-get -y update
-RUN         apt-get -y install curl
+RUN         apt-get -y install curl libjansson4
 ENTRYPOINT	["./cpuminer"]
