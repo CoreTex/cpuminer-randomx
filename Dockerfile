@@ -1,16 +1,16 @@
-# Usage: docker build .
-# Usage: docker run tpruvot/cpuminer-multi -a xevan --url=stratum+tcp://yiimp.ccminer.org:3739 --user=iGadPnKrdpW3pcdVC3aA77Ku4anrzJyaLG --pass=x
+FROM ubuntu as builder
+MAINTAINER	Eric Dorr <githubcode@mail.ericdorr.de>
 
-FROM		ubuntu:14.04
-MAINTAINER	Tanguy Pruvot <tanguy.pruvot@gmail.com>
+WORKDIR /docker-background-cpuminer-randomx
+RUN     apt-get update
+RUN		apt-get install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev zlib1g-dev make g++
+RUN 	git clone https://github.com/CoreTex/cpuminer-randomx.git .
+RUN	    ./build.sh
 
-RUN		apt-get update -qq
+FROM ubuntu
+MAINTAINER	Eric Dorr <githubcode@mail.ericdorr.de>
 
-RUN		apt-get install -qy automake autoconf pkg-config libcurl4-openssl-dev libssl-dev libjansson-dev libgmp-dev make g++ git
-
-RUN		git clone https://github.com/tpruvot/cpuminer-multi -b linux
-
-RUN		cd cpuminer-multi && ./build.sh
-
-WORKDIR		/cpuminer-multi
+WORKDIR /docker-background-cpuminer-randomx
+COPY --from=builder /docker-background-cpuminer-randomx .
+RUN		apt-get install curl
 ENTRYPOINT	["./cpuminer"]
